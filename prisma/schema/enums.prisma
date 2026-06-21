@@ -1,0 +1,12 @@
+// -----user schema enums
+
+enum ActiveStatus {
+ACTIVE
+DEACTIVE
+}
+
+enum Role {
+USER
+AUTHOR
+ADMIN
+}
