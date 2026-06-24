@@ -9,10 +9,12 @@ import jwt, { SignOptions } from "jsonwebtoken";
 const loginUser = async (payload: Logindata) => {
   const { email, password } = payload;
 
+  //   -----checking if user exist
   const user = await prisma.user.findUniqueOrThrow({
     where: { email },
   });
 
+  //   ----password vallidation
   const isPasswordMatchaed = await brypt.compare(password, user.password);
 
   if (!isPasswordMatchaed) {
@@ -26,12 +28,14 @@ const loginUser = async (payload: Logindata) => {
     role: user.role,
   };
 
+  //   acc token generate
   const accessToken = jwtUtils.createToken(
     jwtPayload,
     config.jwt_access_secret!,
     { expiresIn: config.jwt_access_expires_in } as SignOptions,
   );
 
+  //   ref token generate
   const refreshToken = jwtUtils.createToken(
     jwtPayload,
     config.jwt_refresh_secret!,
