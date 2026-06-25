@@ -24,8 +24,6 @@ const registerController = catchAsync(
 // ----get profile
 const getMyProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-  
-
     const profile = await userServices.getMyProfile(req.user?.id as string);
 
     sendResponse(res, {
@@ -37,4 +35,29 @@ const getMyProfile = catchAsync(
   },
 );
 
-export const userController = { registerController, getMyProfile };
+// ----updateProfile
+const updateProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const updatedProfile = await userServices.updateProfile(
+      req.user?.id as string,
+      req.body,
+    );
+
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "user profile Update successfully",
+      data: updateProfile,
+    });
+
+
+
+  },
+);
+
+export const userController = {
+  registerController,
+  getMyProfile,
+  updateProfile,
+};
