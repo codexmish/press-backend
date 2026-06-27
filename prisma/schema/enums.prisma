@@ -1,12 +1,23 @@
 // -----user schema enums
 
 enum ActiveStatus {
-ACTIVE
-DEACTIVE
+  ACTIVE
+  DEACTIVE
 }
 
 enum Role {
-USER
-AUTHOR
-ADMIN
+  USER
+  AUTHOR
+  ADMIN
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHD
+  ARCHIVED
+}
+
+enum CommentStatus {
+  APPROVED
+  REJECT
 }

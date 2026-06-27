@@ -1,0 +1,20 @@
+model Post {
+  id         String     @id @default(uuid())
+  title      String
+  content    String     @db.Text
+  thummbnail String?
+  isFeatured Boolean    @default(false)
+  status     PostStatus @default(PUBLISHD)
+  tafe       String[]
+  views      Int        @default(0)
+  authorId   String
+  author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@map("post")
+}
