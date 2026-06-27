@@ -23,7 +23,16 @@ const createPost = catchAsync(
 
 // ---------get all post
 const getAllPost = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const posts = await postServices.getAllPost();
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "all posts",
+      data: posts,
+    });
+  },
 );
 
 // ---------get post stats

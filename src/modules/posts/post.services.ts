@@ -4,17 +4,26 @@ import { CreatePostPayload } from "./post.interface";
 // ---------create post
 const createPost = async (payload: CreatePostPayload, userID: string) => {
   const result = prisma.post.create({
-    data:{
+    data: {
       ...payload,
-      authorId: userID
-    }
-  })
+      authorId: userID,
+    },
+  });
 
-  return result
+  return result;
 };
 
 // ---------get all post
-const getAllPost = async () => {};
+const getAllPost = async () => {
+  const posts = await prisma.post.findMany({
+    include: {
+      author: true,
+      comments: true,
+    },
+  });
+
+  return posts;
+};
 
 // ---------get post stats
 const getPostStats = async () => {};
