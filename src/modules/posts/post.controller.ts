@@ -1,9 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchasync";
+import { postServices } from "./post.services";
+import { sendResponse } from "../../utils/sendResponse";
+import httpStatus from "http-status";
 
 // ---------create post
 const createPost = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.user?.id;
+    const payload = req.body;
+
+    const result = await postServices.createPost(payload, id as string);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: "post created",
+      data: result,
+    });
+  },
 );
 
 // ---------get all post

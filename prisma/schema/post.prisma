@@ -2,10 +2,10 @@ model Post {
   id         String     @id @default(uuid())
   title      String
   content    String     @db.Text
-  thummbnail String?
+  thumbnail String?
   isFeatured Boolean    @default(false)
   status     PostStatus @default(PUBLISHD)
-  tafe       String[]
+  tags       String[]
   views      Int        @default(0)
   authorId   String
   author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
