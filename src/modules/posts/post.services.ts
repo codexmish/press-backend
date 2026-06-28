@@ -125,15 +125,31 @@ const updatePost = async (
     },
   });
 
-
-  return result
-
-
-
+  return result;
 };
 
 // ---------delete post
-const deletePost = async () => {};
+const deletePost = async (
+  pastId: string,
+  authorId: string,
+  isAdmin: boolean,
+) => {
+  const post = await prisma.post.findUniqueOrThrow({
+    where: {
+      id: pastId,
+    },
+  });
+
+  if (!isAdmin && post.authorId !== authorId) {
+    throw new Error("Not perimted");
+  }
+
+  const result = await prisma.post.delete({
+    where: {
+      id: pastId,
+    },
+  });
+};
 
 export const postServices = {
   createPost,
