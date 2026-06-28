@@ -47,7 +47,21 @@ const getMyPosts = catchAsync(
 
 // ---------get posts by id
 const getPostsById = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const postId = req.params.postId;
+    if (!postId) {
+      throw new Error("post id required");
+    }
+
+    const post = await postServices.getPostsById(postId as string);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "post get",
+      data: post,
+    });
+  },
 );
 
 // ---------update post

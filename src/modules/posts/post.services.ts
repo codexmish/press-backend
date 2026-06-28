@@ -40,7 +40,34 @@ const getPostStats = async () => {};
 const getMyPosts = async () => {};
 
 // ---------get post by id
-const getPostsById = async () => {};
+const getPostsById = async (postId: string) => {
+  const post = await prisma.post.findUniqueOrThrow({
+    where: {
+      id: postId,
+    },
+  });
+
+  const updatedPost = await prisma.post.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      views: {
+        increment: 1,
+      },
+    },
+    include: {
+      author: {
+        omit: {
+          password: true,
+        },
+      },
+      comments: true,
+    },
+  });
+
+  return updatedPost;
+};
 
 // ---------update post
 const updatePost = async () => {};
