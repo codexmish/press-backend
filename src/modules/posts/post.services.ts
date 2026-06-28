@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { CreatePostPayload } from "./post.interface";
+import { CreatePostPayload, IupdatePostPayload } from "./post.interface";
 
 // ---------create post
 const createPost = async (payload: CreatePostPayload, userID: string) => {
@@ -94,7 +94,43 @@ const getPostsById = async (postId: string) => {
 };
 
 // ---------update post
-const updatePost = async () => {};
+const updatePost = async (
+  pastId: string,
+  patload: IupdatePostPayload,
+  authorId: string,
+  isAdmin: boolean,
+) => {
+  const post = await prisma.post.findFirstOrThrow({
+    where: {
+      id: pastId,
+    },
+  });
+
+  if (!isAdmin && post.authorId !== authorId) {
+    throw new Error("Not perimted");
+  }
+
+  const result = prisma.post.update({
+    where: {
+      id: pastId,
+    },
+    data: patload,
+    include: {
+      author: {
+        omit: {
+          password: true,
+        },
+      },
+      comments: true,
+    },
+  });
+
+
+  return result
+
+
+
+};
 
 // ---------delete post
 const deletePost = async () => {};
