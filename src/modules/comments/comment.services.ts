@@ -31,7 +31,15 @@ const getCommentByAuthorId = async (authorId: string) => {
 };
 
 // ---------get Comment By CommentId
-const getCommentByCommentId = async () => {};
+const getCommentByCommentId = async (commentid: string) => {
+  const result = await prisma.comment.findUniqueOrThrow({
+    where: {
+      id: commentid
+    }
+  })
+
+  return result
+};
 
 // ---------update Comment
 const updateComment = async () => {};

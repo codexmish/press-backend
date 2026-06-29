@@ -39,7 +39,21 @@ const getCommentByAuthorId = catchAsync(
 
 // --------get comment by comment id
 const getCommentByCommentId = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+
+    const commentId = req.params.commentId
+
+
+    const comment = await commentServices.getCommentByCommentId(commentId as string)
+
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "comment get successfully",
+      data: comment,
+    });
+  },
 );
 
 // --------update comment
