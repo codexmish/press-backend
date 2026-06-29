@@ -7,7 +7,10 @@ import httpStatus from "http-status";
 // ---------create comment
 const createComment = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await commentServices.createComment(req.body, req.user?.id as string);
+    const result = await commentServices.createComment(
+      req.body,
+      req.user?.id as string,
+    );
 
     sendResponse(res, {
       success: true,
@@ -20,7 +23,18 @@ const createComment = catchAsync(
 
 // --------get comment by author id
 const getCommentByAuthorId = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await commentServices.getCommentByAuthorId(
+      req.user?.id as string,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "author comment get successfully",
+      data: result,
+    });
+  },
 );
 
 // --------get comment by comment id

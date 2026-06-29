@@ -6,18 +6,29 @@ const createComment = async (payload: CommentPayloaddd, authorId: string) => {
   const { content, postId } = payload;
 
   const comment = await prisma.comment.create({
-    data:{
+    data: {
       content,
       authorId,
-      postId
+      postId,
     },
-  })
+  });
 
-  return comment
+  return comment;
 };
 
 // ---------get Comment By AuthorId
-const getCommentByAuthorId = async () => {};
+const getCommentByAuthorId = async (authorId: string) => {
+  const transactionResult = await prisma.$transaction(async (tx) => {
+    const comment = tx.comment.findMany({
+      where: {
+        authorId,
+      },
+    });
+
+    return comment;
+  });
+  return transactionResult;
+};
 
 // ---------get Comment By CommentId
 const getCommentByCommentId = async () => {};
