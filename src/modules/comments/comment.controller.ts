@@ -40,12 +40,11 @@ const getCommentByAuthorId = catchAsync(
 // --------get comment by comment id
 const getCommentByCommentId = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    const commentId = req.params.commentId;
 
-    const commentId = req.params.commentId
-
-
-    const comment = await commentServices.getCommentByCommentId(commentId as string)
-
+    const comment = await commentServices.getCommentByCommentId(
+      commentId as string,
+    );
 
     sendResponse(res, {
       success: true,
@@ -58,7 +57,24 @@ const getCommentByCommentId = catchAsync(
 
 // --------update comment
 const updateComment = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const commentId = req.params.commentId;
+    const authorId = req.user?.id;
+    const payload = req.body;
+
+    const comment = await commentServices.updateComment(
+      authorId as string,
+      payload,
+      commentId as string,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "comment updated successfully",
+      data: comment,
+    });
+  },
 );
 
 // --------delete comment

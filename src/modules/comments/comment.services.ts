@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { CommentPayloaddd } from "./comment.interface";
+import { CommentPayloaddd, CommentupdatePayloaddd } from "./comment.interface";
 
 // ---------create comment
 const createComment = async (payload: CommentPayloaddd, authorId: string) => {
@@ -34,15 +34,40 @@ const getCommentByAuthorId = async (authorId: string) => {
 const getCommentByCommentId = async (commentid: string) => {
   const result = await prisma.comment.findUniqueOrThrow({
     where: {
-      id: commentid
-    }
-  })
+      id: commentid,
+    },
+  });
 
-  return result
+  return result;
 };
 
 // ---------update Comment
-const updateComment = async () => {};
+const updateComment = async (
+  authorId: string,
+  patload: CommentupdatePayloaddd,
+  commentId: string,
+) => {
+  const { content } = patload;
+
+  const comment = await prisma.comment.findUniqueOrThrow({
+    where: {
+      id: commentId,
+    },
+  });
+
+  if (comment.authorId !== authorId) {
+    throw new Error("you are not authorized for this");
+  }
+
+  const updatedComment = await prisma.comment.update({
+    where: {
+      id: commentId,
+    },
+    data: patload,
+  });
+
+  return updatedComment;
+};
 
 // ---------delete Comment
 const deleteComment = async () => {};
