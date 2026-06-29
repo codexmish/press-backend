@@ -70,7 +70,27 @@ const updateComment = async (
 };
 
 // ---------delete Comment
-const deleteComment = async () => {};
+const deleteComment = async (
+  commentId: string,
+  authorId: string,
+  isAdmin: boolean,
+) => {
+  const comment = await prisma.comment.findUniqueOrThrow({
+    where: {
+      id: commentId,
+    },
+  });
+
+  if (comment.authorId !== authorId && !isAdmin) {
+    throw new Error("you are not authorized for this");
+  }
+
+  const result = prisma.comment.delete({
+    where: {
+      id: commentId,
+    },
+  });
+};
 
 // ---------moderate Comment
 const moderateComment = async () => {};

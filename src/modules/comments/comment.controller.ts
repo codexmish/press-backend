@@ -79,7 +79,24 @@ const updateComment = catchAsync(
 
 // --------delete comment
 const deleteComment = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    const commentId = req.params.commentId;
+    const authorId = req.user?.id;
+    const isAdmin = req.user?.role === "ADMIN";
+
+    const comment = await commentServices.deleteComment(
+      commentId as string,
+      authorId as string,
+      isAdmin,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "comment deleted successfully",
+      data: comment,
+    });
+  },
 );
 
 // --------modarate comment
