@@ -1,5 +1,20 @@
+import { prisma } from "../../lib/prisma";
+import { CommentPayloaddd } from "./comment.interface";
+
 // ---------create comment
-const createComment = async () => {};
+const createComment = async (payload: CommentPayloaddd, authorId: string) => {
+  const { content, postId } = payload;
+
+  const comment = await prisma.comment.create({
+    data:{
+      content,
+      authorId,
+      postId
+    },
+  })
+
+  return comment
+};
 
 // ---------get Comment By AuthorId
 const getCommentByAuthorId = async () => {};
