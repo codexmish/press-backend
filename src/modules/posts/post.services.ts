@@ -37,47 +37,49 @@ const getAllPost = async () => {
 // ---------get post stats
 const getPostStats = async () => {
   const transactionResult = await prisma.$transaction(async (tx) => {
-    const totalpost = await tx.post.count();
-
-    const totalPublishedPost = await tx.post.count({
-      where: {
-        status: PostStatus.PUBLISHD,
-      },
-    });
-
-    const totalDraftPost = await tx.post.count({
-      where: {
-        status: PostStatus.DRAFT,
-      },
-    });
-
-    const totalArchivedPost = await tx.post.count({
-      where: {
-        status: PostStatus.ARCHIVED,
-      },
-    });
-
-    const totalComments = await tx.comment.count();
-
-    const totalApprovedComments = await tx.comment.count({
-      where: {
-        status: CommentStatus.APPROVED,
-      },
-    });
-
-    const totalRejectedComments = await tx.comment.count({
-      where: {
-        status: CommentStatus.REJECT,
-      },
-    });
-
-    const totalViewsAggrigate = await tx.post.aggregate({
-      _sum: {
-        views: true
-      }
-    })
-
-    const totalViews = totalViewsAggrigate._sum.views
+    const [
+      totalpost,
+      totalPublishedPost,
+      totalDraftPost,
+      totalArchivedPost,
+      totalComments,
+      totalApprovedComments,
+      totalRejectedComments,
+      totalViewsAggrigate,
+    ] = await Promise.all([
+      await tx.post.count(),
+      await tx.post.count({
+        where: {
+          status: PostStatus.PUBLISHD,
+        },
+      }),
+      await tx.post.count({
+        where: {
+          status: PostStatus.DRAFT,
+        },
+      }),
+      await tx.post.count({
+        where: {
+          status: PostStatus.ARCHIVED,
+        },
+      }),
+      await tx.comment.count(),
+      await tx.comment.count({
+        where: {
+          status: CommentStatus.APPROVED,
+        },
+      }),
+      await tx.comment.count({
+        where: {
+          status: CommentStatus.REJECT,
+        },
+      }),
+      await tx.post.aggregate({
+        _sum: {
+          views: true,
+        },
+      }),
+    ]);
 
     return {
       totalpost,
@@ -87,7 +89,7 @@ const getPostStats = async () => {
       totalComments,
       totalApprovedComments,
       totalRejectedComments,
-      totalViews
+      totalViews: totalViewsAggrigate._sum.views,
     };
   });
 
